@@ -1,15 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+import { autorSchema } from "./Autor.js";
 
-
-
-// Schema (é um objeto de configuração que define a estrutura e as propriedades de um documento)
 const livroSchema = new mongoose.Schema({
-    id: {type: mongoose.Schema.Types.ObjectId},
-    titulo: {type: String, require: true},
-    autor: {type: String, require: true},
-    editora: {type: String},
-    preco: {type: Number},
-    paginas: {type: Number}
+  id: { type: mongoose.Schema.Types.ObjectId },
+  titulo: { type: String, required: true },
+  editora: { type: String },
+  preco: { type: Number },
+  paginas: { type: Number },
+  autor: autorSchema
 }, { versionKey: false });
 
 const livro = mongoose.model("livros", livroSchema);
