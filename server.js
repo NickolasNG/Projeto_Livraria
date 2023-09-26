@@ -17,6 +17,6 @@ const rotas = {
 }); */
 
 app.listen(PORT, () => {
-    console.log("servidor Escutando!")
+    console.log("servidor Escutando")
 });
 
