@@ -5,11 +5,11 @@ import routes from "./routes/index.js";
 const conexao = await conectaDataBase();
 // ormalmente, em JavaScript, os métodos que têm o nome on estão relacionados a algum evento
 conexao.on("error", (erro) => {
-    console.error("erro de conexao", erro);
+  console.error("erro de conexao", erro);
 });
 
 conexao.once("open", () => {
-    console.log("Conexao com o banco de dados feita com sucesso");
+  console.log("Conexao com o banco de dados feita com sucesso");
 });
 
 const app = express();
