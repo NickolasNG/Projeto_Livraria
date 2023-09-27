@@ -11,13 +11,18 @@ class autorController {
     }
   }
 
-  static async listarAutorID(req, res) {
+  static async listarAutorID(req, res, next) {
     try {
       const id = req.params.id;
       const autorEncontrado = await autor.findById(id);
-      res.status(200).json(autorEncontrado);
+
+      if(autorEncontrado !== null){
+        res.status(200).send(autorEncontrado);
+      } else {
+        res.status(404).json({ message: "Id do autor nao localizado" });
+      }    
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha ao encontrar o autor` });
+      next(erro);
     }
   }
 

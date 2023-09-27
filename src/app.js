@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import express from "express";
 import conectaDataBase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
+import mongoose from "mongoose";
 
 const conexao = await conectaDataBase();
 // ormalmente, em JavaScript, os métodos que têm o nome on estão relacionados a algum evento
@@ -15,6 +17,14 @@ conexao.once("open", () => {
 const app = express();
 app.use(express.json());
 routes(app);
+
+app.use((erro, req, res, next) => {
+  if(erro instanceof mongoose.Error.CastError){
+    res.status(400).send({message: "Um ou mais dados fornecidos estão incorretos"})
+  } else {
+    res.status(500).send({message: "erro interno de servidor"});
+  }
+});
 
 export default app;
 
