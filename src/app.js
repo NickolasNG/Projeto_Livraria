@@ -3,6 +3,7 @@ import express from "express";
 import conectaDataBase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 import manipuladorDeErros from "./middlewares/manipuladorDeErros.js";
+import manipulador404 from "./middlewares/manipulador404.js";
 
 const conexao = await conectaDataBase();
 // ormalmente, em JavaScript, os métodos que têm o nome on estão relacionados a algum evento
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.json());
 routes(app);
 
+app.use(manipulador404);
 app.use(manipuladorDeErros);
 
 export default app;
