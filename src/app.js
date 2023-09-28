@@ -1,18 +1,13 @@
-/* eslint-disable no-unused-vars */
 import express from "express";
-import conectaDataBase from "./config/dbConnect.js";
+import db from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 import manipuladorDeErros from "./middlewares/manipuladorDeErros.js";
 import manipulador404 from "./middlewares/manipulador404.js";
 
-const conexao = await conectaDataBase();
-// ormalmente, em JavaScript, os métodos que têm o nome on estão relacionados a algum evento
-conexao.on("error", (erro) => {
-  console.error("erro de conexao", erro);
-});
 
-conexao.once("open", () => {
-  console.log("Conexao com o banco de dados feita com sucesso");
+db.on("error", console.log.bind(console, "Erro de conexão"));
+db.once("open", () => {
+  console.log("conexão com o banco feita com sucesso");
 });
 
 const app = express();
@@ -20,7 +15,8 @@ app.use(express.json());
 routes(app);
 
 app.use(manipulador404);
+
+// eslint-disable-next-line no-unused-vars
 app.use(manipuladorDeErros);
 
 export default app;
-
