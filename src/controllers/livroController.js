@@ -48,13 +48,13 @@ class LivroController {
   static atualizarLivro = async (req, res, next) => {
     try {
       const id = req.params.id;
-    
-      const livroResultado = await livros.findByIdAndUpdate(id, {$set: req.body});
+
+      const livroResultado = await livros.findByIdAndUpdate(id, { $set: req.body });
 
       console.log(livroResultado);
-    
+
       if (livroResultado !== null) {
-        res.status(200).send({message: "Livro atualizado com sucesso"});
+        res.status(200).send({ message: "Livro atualizado com sucesso" });
       } else {
         next(new NaoEncontrado("Id do livro não localizado."));
       }
@@ -70,9 +70,9 @@ class LivroController {
       const livroResultado = await livros.findByIdAndDelete(id);
 
       console.log(livroResultado);
-      
+
       if (livroResultado !== null) {
-        res.status(200).send({message: "Livro removido com sucesso"});
+        res.status(200).send({ message: "Livro removido com sucesso" });
       } else {
         next(new NaoEncontrado("Id do livro não localizado."));
       }
@@ -83,13 +83,10 @@ class LivroController {
 
   static listarLivroPorFiltro = async (req, res, next) => {
     try {
-      const { editora ,titulo} = req.query;
-      const busca = {};
-      if(editora) busca.editora = editora;
-      if (titulo) busca.titulo = titulo;
-      
+      const busca = processaBusca(req.query); 
+
       const livrosResultado = await livros.find(busca);
-      if(livrosResultado !== null){
+      if (livrosResultado !== null) {
         res.status(200).send(livrosResultado);
       } else {
         next(new NaoEncontrado("Editora não localizada."));
@@ -98,6 +95,22 @@ class LivroController {
       next(erro);
     }
   };
+}
+
+function processaBusca(parametros){
+  const { editora, titulo, minPaginas, maxPaginas } = parametros;
+
+  const busca = {};
+
+  if (editora) busca.editora = editora;
+  if (titulo) busca.titulo = { $regex: titulo, $options: "i" };
+
+  if(minPaginas || maxPaginas) busca.numeroPaginas = {};
+
+  if(minPaginas) busca.numeroPaginas.$gte = minPaginas;
+  if (maxPaginas) busca.numeroPaginas.$lte = maxPaginas;
+
+  return busca;
 }
 
 export default LivroController;
